@@ -87,7 +87,7 @@ class Pessoa {
   }
 
   adotar(animal) {
-    this._animaisAdotados.push(animal.nome);
+    this._animaisAdotados.push(animal.retornarNome());
   }
 
   retornarId() {
@@ -96,7 +96,6 @@ class Pessoa {
 
   retornarBrinquedos() {
     return FormatarTexto.listaMaiusculaSemEspaco(this._brinquedos);
-
   }
 
   retornarAnimaisAdotados() {
@@ -115,6 +114,19 @@ class Animal {
     if (this._nome === "Loco") {
       const temTodos = this._brinquedos.every(brinquedo => pessoa.retornarBrinquedos().includes(brinquedo));
       return temTodos && outrosAnimais.length > 0;
+    }
+
+    if (this._tipo === "gato") {
+      const atende = this.ehSequencial(this._brinquedos, pessoa.retornarBrinquedos());
+      if (!atende) return false;
+
+      for (const animal of outrosAnimais) {
+        const dadosOutro = ANIMAIS[animal];
+
+        if (dadosOutro.brinquedos.some(brinquedo => this._brinquedos.includes(brinquedo))) {
+          return false;
+        }
+      }
     }
 
     return this.ehSequencial(this._brinquedos, pessoa.retornarBrinquedos());
@@ -171,7 +183,6 @@ class FormatarTexto {
   static comecoMaiusculo(texto) {
     return texto.charAt(0).toUpperCase() + texto.slice(1).toLowerCase();
   }
-
 }
 
 export { AbrigoAnimais as AbrigoAnimais };
